@@ -1,0 +1,180 @@
+<%- include('header') %>
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb">
+            <div class="row">
+                <div class="col-12 d-flex no-block align-items-center">
+                    <div class="ml-auto text-right">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Library</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="">
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <div class="col-12 d-flex ">
+                <div class="col-md-6">
+                    <div class="card">
+                        <form class="form-horizontal" action="/blog" method="get" enctype="multipart/form-data">
+                            <div class="card-body d-flex justify-content-center align-items-center">
+                                <div class="form-group row d-flex">
+                                    <label for="lname"
+                                        class="col-sm-3 text-right control-label col-form-label">Search</label>
+                                    <div class="col-sm-9">
+                                        <input type="search" class="form-control" id="lname" placeholder="Search"
+                                            name="search">
+                                    </div>
+
+                                </div>
+                                <div class="border-top">
+                                    <div class="card-body">
+                                        <button type="submit" class="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <form action="">
+                                <button class="btn btn-warning btn-sm mt-2">All</button>
+                                <% let OldData = [] %>
+                                <% blogs.map((e)=>{ %>
+                                    <% if(e.Category && !OldData.includes(e.Category)) { %>
+                                        
+                                            <a href="/blog?category=<%= e.Category %>" 
+                                                class="btn btn-primary btn-sm mt-2 ml-2">
+                                        <%= e.Category %>
+                                        </a>
+
+                                        <% OldData.push(e.Category)%>
+                                    <%}%>
+                                <% })%>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <form class="form-horizontal" action="/blog" method="POST" enctype="multipart/form-data">
+
+                        <div class="card-body">
+                            <h4 class="card-title">Personal Info</h4>
+                            <div class="form-group row">
+                                <label for="fname"
+                                    class="col-sm-3 text-right control-label col-form-label">Title</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="fname" placeholder="Title" name="title">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="lname"
+                                    class="col-sm-3 text-right control-label col-form-label">Description</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="lname" placeholder="Description"
+                                        name="description">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Img</label>
+                                <div class="col-sm-9">
+                                    <input type="file" class="form-control" id="cono1" placeholder="" name="img">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="lname"
+                                    class="col-sm-3 text-right control-label col-form-label">Category</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="lname" placeholder="Category"
+                                        name="Category">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="lname"
+                                    class="col-sm-3 text-right control-label col-form-label">Author</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="lname" placeholder="Author"
+                                        name="Author">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-top">
+                            <div class="card-body">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <% if (blogs && blogs.length> 0) { %>
+
+                    <% blogs.map((e)=> { %>
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card h-100 shadow-sm">
+
+                                <a href="/OneBlogView/<%= e._id %>">
+                                    <img src="/uploads/<%= e.img %>" class="card-img-top"
+                                        style="height:200px; object-fit:cover;">
+                                </a>
+
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">
+                                        <%= e.title %>
+                                    </h5>
+
+                                    <p class="card-text text-muted">
+                                        <%= e.description.substring(0, 80) %>...
+                                    </p>
+
+                                    <p class="text-muted">
+                                        <strong>Category:</strong>
+                                        <%= e.Category %>
+                                    </p>
+
+                                    <p class="text-muted">
+                                        <strong>Author:</strong>
+                                        <%= e.Author %>
+                                    </p>
+
+                                    <a href="/blogDelete/<%= e._id %>" class="btn btn-danger btn-sm mt-2">
+                                        Delete
+                                    </a>
+                                    <a href="/editBlog/<%= e._id %>" class="btn btn-warning btn-sm mt-2">
+                                        Edit
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <% }) %>
+
+                            <% } else { %>
+                                <div class="col-12 text-center">
+                                    <h4>No Blogs Found</h4>
+                                </div>
+                                <% } %>
+            </div>
+
+            <%- include('footer') %>
