@@ -1,5 +1,5 @@
+const blog = require("../model/blog.model");
 const Admin = require("../model/admin.model");
-const blog = require("../model/admin.model");
 const { addAdmin } = require("./admin.controller");
 const cookieParser = require('cookie-parser');
 const passwordHash = require('password-hash');
@@ -18,24 +18,8 @@ exports.login = async (req, res) => {
 exports.loginData = async (req, res) => {
     try {
         const { email, password } = req.body
-
         let admin = await Admin.findOne({ email })
-
-        if (!admin) {
-            console.log("admin not found");
-            return res.redirect("/");
-        }
-        if (admin.password !== password) {
-
-            console.log("password rong");
-            return res.redirect("/");
-        }
-        const hashPassword = passwordHash.generate("admin")
-        res.cookie("userData", JSON.stringify({
-            id: admin._id,
-            email: admin.email,
-            password: hashPassword,
-        }));
+        console.log(admin);
         return res.redirect("/dashboard");
 
     } catch (error) {
@@ -45,14 +29,6 @@ exports.loginData = async (req, res) => {
 }
 exports.dashboard = async (req, res) => {
     try {
-
-        const data = req.cookies.userData;
-        console.log(data);
-
-        if (!data) {
-            return res.redirect("/")
-        }
-
         return res.render("dashboard")
 
     } catch (error) {
@@ -62,26 +38,16 @@ exports.dashboard = async (req, res) => {
     }
 }
 
-exports.logout = async (req, res) => {
-    try {
+exports.logout = (req, res) => {
+    req.logout(function (err) {
+        if (err) { return next(err); }
 
-        res.clearCookie("userData")
-        const data = req.cookies.userData;
-        console.log(data);
-        if (!data) {
-            // res.redirect("h")
-            console.log("data nahi hai");
-
-        }
-        return res.redirect("/")
-
-    } catch (error) {
-        console.log(error);
-        res.redirect("/");
-
-    }
-}
-
+        req.session.destroy(() => {
+            res.clearCookie("connect.sid");
+            return res.redirect("/");
+        });
+    });
+};
 exports.forgotPassword = async (req, res) => {
     try {
         return res.render("./admin/forgotPassoword");
@@ -91,6 +57,35 @@ exports.forgotPassword = async (req, res) => {
     }
 }
 exports.blog = async (req, res) => {
+    try {
+        return res.render("./blog");
+
+    } catch (error) {
+        console.log(error);
+        res.redirect("/");
+    }
+}
+exports.blogFrom = async (req, res) => {
+    try {
+        const blogData = req.body
+        console.log(blogData);
+        console.log("File:", req.file);
+
+        const blogs = await blog.create({
+            title: req.body.title,
+            description: req.body.description,
+            img: req.file.filename,
+            Category: req.body.Category,
+            Author: req.body.Author,
+        });
+        return res.redirect("/blog");
+
+    } catch (error) {
+        console.log(error);
+        res.redirect("/");
+    }
+}
+exports.blogDataView = async (req, res) => {
     try {
         const searchData = req.query.search;
         const categorySearch = req.query.category;
@@ -109,28 +104,7 @@ exports.blog = async (req, res) => {
             filter.Category = categorySearch;
         }
         const blogs = await blog.find(filter);
-
-        return res.render("./blog", { blogs });
-
-    } catch (error) {
-        console.log(error);
-        res.redirect("/");
-    }
-}
-exports.blogDataView = async (req, res) => {
-    try {
-        const blogData = req.body
-        console.log(blogData);
-        console.log("File:", req.file);
-
-        const blogs = await blog.create({
-            title: req.body.title,
-            description: req.body.description,
-            img: req.file.filename,
-            Category: req.body.Category,
-            Author: req.body.Author,
-        });
-        return res.redirect("/blog");
+        res.render("viewBlog", { blogs })
     } catch (error) {
         console.log(error);
         res.redirect("/");
@@ -153,9 +127,7 @@ exports.blogDelete = async (req, res) => {
     try {
         const id = req.params.id;
         const blogData = await blog.findById(id);
-        if (!blogData) {
-            return res.redirect("/blog");
-        }
+
         if (blogData.img) {
             const imagePath = path.join(__dirname, "../uploads/", blogData.img);
 
@@ -164,7 +136,7 @@ exports.blogDelete = async (req, res) => {
             }
         }
         await blog.findByIdAndDelete(id);
-        return res.redirect("/blog");
+        return res.redirect("/viewBlog");
     } catch (error) {
         console.log(error);
         res.redirect("/");

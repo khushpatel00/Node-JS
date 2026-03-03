@@ -14,13 +14,4 @@ const adminSchema = mongoose.Schema({
 });
 
 
-const blog = mongoose.Schema({
-    title: String,
-    description: String,
-    Category: String,
-    Author: String,
-    img: String,
-});
-
 module.exports = mongoose.model("Admin", adminSchema);
-module.exports = mongoose.model("blog", blog);

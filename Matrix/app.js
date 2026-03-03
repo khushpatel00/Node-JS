@@ -7,18 +7,25 @@ const dbconnect = require("./config/dbconnect")
 app.use(express.json())
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
-const adminSchema = require("./model/admin.model")
+const session = require("express-session");
+const passport = require("./controller/localStregert");
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 dbconnect();
-// body parser middleware (important)
 app.use(express.urlencoded({ extended: true }));
 
+app.use(session({
+    secret: "vivekSecret",
+    resave: false,
+    saveUninitialized: false
+}));
 
-// routes
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/", require("./routes/index.routes"));
 
 app.listen(3000, () => {
     console.log("Server start at http://localhost:3000");
 });
- //jkhq ecyb ixdu cnby
+//jkhq ecyb ixdu cnby

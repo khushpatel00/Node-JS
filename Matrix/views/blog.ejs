@@ -17,63 +17,9 @@
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
+
         <div class="">
-            <!-- ============================================================== -->
-            <!-- Start Page Content -->
-            <!-- ============================================================== -->
-            <div class="col-12 d-flex ">
-                <div class="col-md-6">
-                    <div class="card">
-                        <form class="form-horizontal" action="/blog" method="get" enctype="multipart/form-data">
-                            <div class="card-body d-flex justify-content-center align-items-center">
-                                <div class="form-group row d-flex">
-                                    <label for="lname"
-                                        class="col-sm-3 text-right control-label col-form-label">Search</label>
-                                    <div class="col-sm-9">
-                                        <input type="search" class="form-control" id="lname" placeholder="Search"
-                                            name="search">
-                                    </div>
 
-                                </div>
-                                <div class="border-top">
-                                    <div class="card-body">
-                                        <button type="submit" class="btn btn-primary">Search</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body d-flex justify-content-center align-items-center">
-                            <form action="">
-                                <button class="btn btn-warning btn-sm mt-2">All</button>
-                                <% let OldData = [] %>
-                                <% blogs.map((e)=>{ %>
-                                    <% if(e.Category && !OldData.includes(e.Category)) { %>
-                                        
-                                            <a href="/blog?category=<%= e.Category %>" 
-                                                class="btn btn-primary btn-sm mt-2 ml-2">
-                                        <%= e.Category %>
-                                        </a>
-
-                                        <% OldData.push(e.Category)%>
-                                    <%}%>
-                                <% })%>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
             <div class="col-md-6">
                 <div class="card">
                     <form class="form-horizontal" action="/blog" method="POST" enctype="multipart/form-data">
@@ -127,54 +73,6 @@
                     </form>
                 </div>
             </div>
-            <div class="row">
-                <% if (blogs && blogs.length> 0) { %>
 
-                    <% blogs.map((e)=> { %>
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <div class="card h-100 shadow-sm">
-
-                                <a href="/OneBlogView/<%= e._id %>">
-                                    <img src="/uploads/<%= e.img %>" class="card-img-top"
-                                        style="height:200px; object-fit:cover;">
-                                </a>
-
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">
-                                        <%= e.title %>
-                                    </h5>
-
-                                    <p class="card-text text-muted">
-                                        <%= e.description.substring(0, 80) %>...
-                                    </p>
-
-                                    <p class="text-muted">
-                                        <strong>Category:</strong>
-                                        <%= e.Category %>
-                                    </p>
-
-                                    <p class="text-muted">
-                                        <strong>Author:</strong>
-                                        <%= e.Author %>
-                                    </p>
-
-                                    <a href="/blogDelete/<%= e._id %>" class="btn btn-danger btn-sm mt-2">
-                                        Delete
-                                    </a>
-                                    <a href="/editBlog/<%= e._id %>" class="btn btn-warning btn-sm mt-2">
-                                        Edit
-                                    </a>
-                                </div>
-
-                            </div>
-                        </div>
-                        <% }) %>
-
-                            <% } else { %>
-                                <div class="col-12 text-center">
-                                    <h4>No Blogs Found</h4>
-                                </div>
-                                <% } %>
-            </div>
 
             <%- include('footer') %>
